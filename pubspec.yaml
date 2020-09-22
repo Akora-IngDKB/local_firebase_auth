@@ -1,0 +1,14 @@
+name: local_firebase_auth
+description: A dart package that mocks (emulates) the firebase_auth plugin for easy and offline development.
+version: 0.0.1
+author:
+homepage:
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  
+
+dev_dependencies:
+  test: ^1.15.2
