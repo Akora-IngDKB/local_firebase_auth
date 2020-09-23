@@ -31,7 +31,7 @@ class LocalFirebaseAuth {
       );
     }
 
-    final uid = randomAlphaNumeric(40);
+    final uid = randomAlphaNumeric(28);
 
     final _user = User._({
       'email': email,
