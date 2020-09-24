@@ -5,15 +5,10 @@ homepage: https://github.com/Akora-IngDKB/local_firebase_auth.git
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0 <2.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-  
   meta: ^1.2.3
   random_string: ^2.1.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  test: ^1.15.4

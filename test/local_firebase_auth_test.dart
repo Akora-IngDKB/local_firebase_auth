@@ -1,8 +1,9 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:local_firebase_auth/local_firebase_auth.dart';
+import 'package:test/test.dart';
 
 void main() {
   final _auth = LocalFirebaseAuth.instance;
+
   test('User creation test', () async {
     final user1 = await _auth.createUserWithEmailAndPassword(
         email: 'user1@gmail.com', password: 'password');
