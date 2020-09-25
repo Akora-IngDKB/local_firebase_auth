@@ -1,0 +1,33 @@
+name: Tests
+# Triggers the workflow on push or pull request events
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Test with Dart SDK ${{matrix.sdk}} on ${{matrix.os}}
+    runs-on: ${{ matrix.os }}
+    strategy:
+        matrix:
+          os: [macos-latest, ubuntu-latest, windows-latest]
+          sdk: [stable]
+
+    
+    steps:
+
+    - uses: actions/checkout@v1
+    - uses: cedx/setup-dart@v2
+      with:
+        release-channel: ${{matrix.sdk}}
+
+    - run: dart --version
+    - run: pub --version
+    - run: pub get
+    - run: pub run test
+
+    # # Upload coverage reports to Codecov
+    # # https://github.com/marketplace/actions/codecov
+    # - name: Upload coverage to Codecov
+    #   uses: codecov/codecov-action@v1
+    #   with:
+    #     token: ${{ secrets.CODECOV_TOKEN }}
+    #     file: coverage/lcov.info
