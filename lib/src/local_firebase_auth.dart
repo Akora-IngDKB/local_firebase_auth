@@ -10,7 +10,7 @@ class LocalFirebaseAuth {
   static Box _box;
   static String _appName;
 
-  static final String CURRENT_USER_KEY = 'currentUserId';
+  static final String _CURRENT_USER_KEY = 'currentUserId';
 
   LocalFirebaseAuth.initialize(String appName) {
     _appName = appName;
@@ -63,7 +63,7 @@ class LocalFirebaseAuth {
     _box.put(uid, _user._toMap());
 
     // Automatically sign out all users and sign in this one.
-    _box.put(CURRENT_USER_KEY, uid);
+    _box.put(_CURRENT_USER_KEY, uid);
 
     return UserCredential._(_user);
   }
@@ -85,7 +85,7 @@ class LocalFirebaseAuth {
     _box.put(uid, _user._toMap());
 
     // Automatically sign out all users and sign in this one.
-    _box.put(CURRENT_USER_KEY, uid);
+    _box.put(_CURRENT_USER_KEY, uid);
 
     return UserCredential._(_user);
   }
@@ -125,7 +125,7 @@ class LocalFirebaseAuth {
     final _user = _getUser(email: email);
 
     // Automatically sign out all users and sign in this one.
-    _box.put(CURRENT_USER_KEY, _user.uid);
+    _box.put(_CURRENT_USER_KEY, _user.uid);
 
     return UserCredential._(_user);
   }
@@ -137,7 +137,7 @@ class LocalFirebaseAuth {
     await Future.delayed(Duration(milliseconds: 500));
 
     // Remove current user uid
-    _box.put(CURRENT_USER_KEY, null);
+    _box.put(_CURRENT_USER_KEY, null);
   }
 
   static void _checkInitialization() {
