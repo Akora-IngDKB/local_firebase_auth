@@ -18,10 +18,21 @@ class LocalFirebaseAuth {
     Hive.openBox(appName).then((box) => _box = box);
   }
 
+  /// Returns the current [User] if they are currently signed-in, or `null` if
+  /// not.
   User get currentUser => _getUser(currentUser: true);
 
   // TODO: 1. Validate email (RegEx)
   // TODO: 2. Throw appropriate exceptions
+
+  /// Tries to create a new user account with the given email address and
+  /// password.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **email-already-in-use**:
+  ///  - Thrown if there already exists an account with the given email address.
+  /// - **invalid-email**:
+  ///  - Thrown if the email address is not valid.
   Future<UserCredential> createUserWithEmailAndPassword({
     @required String email,
     @required String password,
@@ -57,6 +68,9 @@ class LocalFirebaseAuth {
     return UserCredential._(_user);
   }
 
+  // TODO: If there's an anonymous user already, return that instead.
+
+  /// Asynchronously creates and becomes an anonymous user.
   Future<UserCredential> signInAnonymously() async {
     _checkInitialization();
     await Future.delayed(Duration(milliseconds: 1000));
@@ -78,6 +92,17 @@ class LocalFirebaseAuth {
 
   // TODO: 1. Validate Email (RegEx)
   // TODO: 2. Validate password
+
+  /// Attempts to sign in a user with the given email address and password.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **invalid-email**:
+  ///  - Thrown if the email address is not valid.
+  /// - **user-not-found**:
+  ///  - Thrown if there is no user corresponding to the given email.
+  /// - **wrong-password**:
+  ///  - Thrown if the password is invalid for the given email, or the account
+  ///    corresponding to the email does not have a password set.
   Future<UserCredential> signInWithEmailAndPassword({
     @required String email,
     @required String password,
@@ -105,6 +130,7 @@ class LocalFirebaseAuth {
     return UserCredential._(_user);
   }
 
+  /// Signs out the current user.
   Future<void> signOut() async {
     _checkInitialization();
 
