@@ -6,13 +6,18 @@ void main() {
   final _auth = LocalFirebaseAuth.instance;
 
   test('User creation test', () async {
-    final user1 = await _auth.createUserWithEmailAndPassword(
-        email: 'user1@gmail.com', password: 'password');
+    final email = 'user@gmail.com';
+    final pass = 'password';
+    final user = await _auth.createUserWithEmailAndPassword(
+        email: email, password: pass);
 
-    final user3 = await _auth.signInAnonymously();
+    expect(user.user.email, email);
+  });
 
-    print("User 1: ${user1.user}");
-    print("User 3: ${user3.user}");
+  test('Anonymous Sign In Test', () async {
+    final ann = await _auth.signInAnonymously();
+
+    expect(ann.user.email, null);
   });
 
   // test('User sign in test', () async {
