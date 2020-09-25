@@ -124,15 +124,11 @@ class LocalFirebaseAuth {
   }
 
   static bool _userExists(String email) {
-    for (var value in _box.values) {
-      if (value is Map<String, dynamic>) {
-        final _userMap = Map<String, dynamic>.from(value);
+    var values = _box.values;
+    final userList = values.toList();
+    userList.retainWhere((element) => element is Map<String, dynamic>);
 
-        return _userMap.containsValue(email);
-      }
-    }
-
-    return false;
+    return userList.any((e) => e['email'] == email);
   }
 
   static User _getUser({String email, bool currentUser = false}) {
