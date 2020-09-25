@@ -46,12 +46,13 @@ print(user.uid);
 ## Supported methods
 Since this is a mock and experimental package, it is in no way meant as a replace for Firebase but for use quick and offline development use-cases.  
 The following methods are currently available:  
-| Method | Signature | Parameters |  
-| :--- | :--- | :--- |  
-| createUserWithEmailAndPassword | `Future<UserCredential>` | `String email, String password` |  
-| signInAnonymously | `Future<UserCredential>` | None |  
-| signInWithEmailAndPassword | `Future<UserCredential>` | `String email, String password` |  
-| signOut | `Future<void>` | None |  
+
+| Method | Signature | Parameters |
+| :--- | :--- | :--- |
+| `createUserWithEmailAndPassword` | `Future<UserCredential>` | `String email, String password` |
+| `signInAnonymously` | `Future<UserCredential>` | None |
+| `signInWithEmailAndPassword` | `Future<UserCredential>` | `String email, String password` |
+| `signOut` | `Future<void>` | None |
 
 ## Get Current User
 ```dart
