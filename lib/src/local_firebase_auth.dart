@@ -8,8 +8,10 @@ class LocalFirebaseAuth {
   static LocalFirebaseAuth get instance => _instance;
 
   static Box _box;
+  static String _appName;
 
   LocalFirebaseAuth.initialize(String appName) {
+    _appName = appName;
     Hive.init(appName);
     Hive.openBox(appName).then((box) => _box = box);
   }
@@ -120,10 +122,7 @@ class LocalFirebaseAuth {
   static String _currentUserId;
 
   static void _checkInitialization() {
-    try {
-      Hive.box(_box?.name).add('value');
-    } catch (e) {
-      print("\n\n${e.toString()}");
+    if (_appName == null) {
       throw Exception(
         "LocalFirebaseAuth has not been initialized.\n"
         "Please call LocalFirebaseAuth.initialize('appName') before using any of the methods",
