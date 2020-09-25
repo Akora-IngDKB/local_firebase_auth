@@ -1,5 +1,6 @@
 part of local_firebase_auth;
 
+/// An entry point of the [LocalFirebaseAuth] package.
 class LocalFirebaseAuth {
   static final LocalFirebaseAuth _instance = LocalFirebaseAuth._internal();
   LocalFirebaseAuth._internal();

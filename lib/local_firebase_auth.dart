@@ -1,3 +1,8 @@
+/// An experimental dart package that mocks (emulates) the [firebase_auth](https://pub.dev/packages/firebase_auth)
+/// plugin for quick and offline development.
+///
+/// This is intended to be used solely for development and not as a replacement
+/// for Firebase.
 library local_firebase_auth;
 
 import 'dart:async';
