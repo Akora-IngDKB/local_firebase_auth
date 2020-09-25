@@ -8,7 +8,7 @@ class LocalFirebaseAuth {
   static LocalFirebaseAuth get instance => _instance;
 
   User get currentUser {
-    return _users[_currentUserEmail];
+    return _users[_currentUserId];
   }
 
   // TODO: 1. Validate email (RegEx)
@@ -40,10 +40,10 @@ class LocalFirebaseAuth {
     });
 
     // Using [putIfAbsent] for the sake of sanity
-    _users.putIfAbsent(email, () => _user);
+    _users.putIfAbsent(uid, () => _user);
 
     // Automatically sign out all users and sign in this one.
-    _currentUserEmail = email;
+    _currentUserId = uid;
 
     return UserCredential._(_user);
   }
@@ -70,19 +70,18 @@ class LocalFirebaseAuth {
 
     await Future.delayed(Duration(milliseconds: 1000));
 
-    if (!_users.containsKey(email)) {
+    if (!_users.values.any((u) => u.email == email)) {
       throw FirebaseAuthException(
         code: 'ERROR_USER_NOT_FOUND',
-        message:
-            'There already exists an account with the given email address.',
+        message: 'No account found with the given email address.',
         email: email,
       );
     }
 
-    final _user = _users[email];
+    final _user = _users.values.firstWhere((u) => u.email == email);
 
     // Automatically sign out all users and sign in this one.
-    _currentUserEmail = email;
+    _currentUserId = _user.uid;
 
     return UserCredential._(_user);
   }
@@ -91,9 +90,9 @@ class LocalFirebaseAuth {
     await Future.delayed(Duration(milliseconds: 500));
 
     // Remove current user email
-    _currentUserEmail = null;
+    _currentUserId = null;
   }
 
   static Map<String, User> _users = {};
-  static String _currentUserEmail;
+  static String _currentUserId;
 }
