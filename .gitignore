@@ -76,3 +76,4 @@ build/
 # Package-based
 testApp/
 doc/
+pubspec.lock
