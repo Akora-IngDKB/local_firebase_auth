@@ -17,7 +17,7 @@ void main() {
     expect(user.user.email, email);
   });
 
-  test('Create User Test: User Exists', () async {
+  test('Create User Test: User Already Exists', () async {
     final email = 'user@gmail.com';
     final pass = 'password';
 
@@ -38,6 +38,18 @@ void main() {
     final ann = await _auth.signInAnonymously();
 
     expect(ann.user.email, null);
+  });
+
+  test('Sign In Test', () async {
+    final email = 'user@gmail.com';
+    final pass = 'password';
+
+    final user = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: pass,
+    );
+
+    expect(user.user.email, email);
   });
 
   test('Sign In Test: No Existing User', () async {
