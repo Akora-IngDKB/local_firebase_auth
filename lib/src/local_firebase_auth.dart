@@ -7,6 +7,13 @@ class LocalFirebaseAuth {
 
   static LocalFirebaseAuth get instance => _instance;
 
+  static Box _box;
+
+  LocalFirebaseAuth.initialize(String appName) {
+    Hive.init(appName);
+    Hive.openBox(appName).then((box) => _box = box);
+  }
+
   User get currentUser {
     return _users[_currentUserId];
   }
@@ -17,6 +24,7 @@ class LocalFirebaseAuth {
     @required String email,
     @required String password,
   }) async {
+    _checkInitialization();
     assert(email != null, "[email] cannot be null");
     assert(password != null, "[password] cannot be null");
 
@@ -41,6 +49,7 @@ class LocalFirebaseAuth {
 
     // Using [putIfAbsent] for the sake of sanity
     _users.putIfAbsent(uid, () => _user);
+    _box.put(uid, _user._toMap());
 
     // Automatically sign out all users and sign in this one.
     _currentUserId = uid;
@@ -49,14 +58,24 @@ class LocalFirebaseAuth {
   }
 
   Future<UserCredential> signInAnonymously() async {
+    _checkInitialization();
     await Future.delayed(Duration(milliseconds: 1000));
 
-    return UserCredential._(
-      User._({
-        'isAnonymous': true,
-        'uid': randomAlphaNumeric(40),
-      }),
-    );
+    final uid = randomAlphaNumeric(28);
+
+    final _user = User._({
+      'isAnonymous': true,
+      'uid': uid,
+    });
+
+    // Using [putIfAbsent] for the sake of sanity
+    _users.putIfAbsent(uid, () => _user);
+    _box.put(uid, _user._toMap());
+
+    // Automatically sign out all users and sign in this one.
+    _currentUserId = uid;
+
+    return UserCredential._(_user);
   }
 
   // TODO: 1. Validate Email (RegEx)
@@ -65,6 +84,8 @@ class LocalFirebaseAuth {
     @required String email,
     @required String password,
   }) async {
+    _checkInitialization();
+
     assert(email != null, "[email] cannot be null");
     assert(password != null, "[password] cannot be null");
 
@@ -87,6 +108,8 @@ class LocalFirebaseAuth {
   }
 
   Future<void> signOut() async {
+    _checkInitialization();
+
     await Future.delayed(Duration(milliseconds: 500));
 
     // Remove current user email
@@ -95,4 +118,16 @@ class LocalFirebaseAuth {
 
   static Map<String, User> _users = {};
   static String _currentUserId;
+
+  static void _checkInitialization() {
+    try {
+      Hive.box(_box?.name).add('value');
+    } catch (e) {
+      print("\n\n${e.toString()}");
+      throw Exception(
+        "LocalFirebaseAuth has not been initialized.\n"
+        "Please call LocalFirebaseAuth.initialize('appName') before using any of the methods",
+      );
+    }
+  }
 }
