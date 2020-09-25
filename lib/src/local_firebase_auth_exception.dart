@@ -20,6 +20,6 @@ class FirebaseAuthException implements Exception {
 
   @override
   String toString() {
-    return "$FirebaseAuthException(message: $message, code: $code, email: $email)";
+    return '$FirebaseAuthException(message: $message, code: $code, email: $email)';
   }
 }

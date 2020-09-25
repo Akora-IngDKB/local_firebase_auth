@@ -38,8 +38,8 @@ class LocalFirebaseAuth {
     @required String password,
   }) async {
     _checkInitialization();
-    assert(email != null, "[email] cannot be null");
-    assert(password != null, "[password] cannot be null");
+    assert(email != null, '[email] cannot be null');
+    assert(password != null, '[password] cannot be null');
 
     await Future.delayed(Duration(milliseconds: 1500));
 
@@ -60,10 +60,10 @@ class LocalFirebaseAuth {
       'uid': uid,
     });
 
-    _box.put(uid, _user._toMap());
+    await _box.put(uid, _user._toMap());
 
     // Automatically sign out all users and sign in this one.
-    _box.put(_CURRENT_USER_KEY, uid);
+    await _box.put(_CURRENT_USER_KEY, uid);
 
     return UserCredential._(_user);
   }
@@ -82,10 +82,10 @@ class LocalFirebaseAuth {
       'uid': uid,
     });
 
-    _box.put(uid, _user._toMap());
+    await _box.put(uid, _user._toMap());
 
     // Automatically sign out all users and sign in this one.
-    _box.put(_CURRENT_USER_KEY, uid);
+    await _box.put(_CURRENT_USER_KEY, uid);
 
     return UserCredential._(_user);
   }
@@ -109,8 +109,8 @@ class LocalFirebaseAuth {
   }) async {
     _checkInitialization();
 
-    assert(email != null, "[email] cannot be null");
-    assert(password != null, "[password] cannot be null");
+    assert(email != null, '[email] cannot be null');
+    assert(password != null, '[password] cannot be null');
 
     await Future.delayed(Duration(milliseconds: 1000));
 
@@ -125,7 +125,7 @@ class LocalFirebaseAuth {
     final _user = _getUser(email: email);
 
     // Automatically sign out all users and sign in this one.
-    _box.put(_CURRENT_USER_KEY, _user.uid);
+    await _box.put(_CURRENT_USER_KEY, _user.uid);
 
     return UserCredential._(_user);
   }
@@ -137,13 +137,13 @@ class LocalFirebaseAuth {
     await Future.delayed(Duration(milliseconds: 500));
 
     // Remove current user uid
-    _box.put(_CURRENT_USER_KEY, null);
+    await _box.put(_CURRENT_USER_KEY, null);
   }
 
   static void _checkInitialization() {
     if (_appName == null) {
       throw Exception(
-        "LocalFirebaseAuth has not been initialized.\n"
+        'LocalFirebaseAuth has not been initialized.\n'
         "Please call LocalFirebaseAuth.initialize('appName') before using any of the methods",
       );
     }
