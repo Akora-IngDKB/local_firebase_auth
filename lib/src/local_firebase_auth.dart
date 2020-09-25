@@ -7,9 +7,18 @@ class LocalFirebaseAuth {
 
   static LocalFirebaseAuth get instance => _instance;
 
-  User get currentUser {
-    return _users[_currentUserId];
+  static Box _box;
+  static String _appName;
+
+  static final String CURRENT_USER_KEY = 'currentUserId';
+
+  LocalFirebaseAuth.initialize(String appName) {
+    _appName = appName;
+    Hive.init(appName);
+    Hive.openBox(appName).then((box) => _box = box);
   }
+
+  User get currentUser => _getUser(currentUser: true);
 
   // TODO: 1. Validate email (RegEx)
   // TODO: 2. Throw appropriate exceptions
@@ -17,12 +26,13 @@ class LocalFirebaseAuth {
     @required String email,
     @required String password,
   }) async {
+    _checkInitialization();
     assert(email != null, "[email] cannot be null");
     assert(password != null, "[password] cannot be null");
 
     await Future.delayed(Duration(milliseconds: 1500));
 
-    if (_users.containsKey(email)) {
+    if (_userExists(email)) {
       throw FirebaseAuthException(
         code: 'ERROR_EMAIL_ALREADY_IN_USE',
         message:
@@ -39,24 +49,31 @@ class LocalFirebaseAuth {
       'uid': uid,
     });
 
-    // Using [putIfAbsent] for the sake of sanity
-    _users.putIfAbsent(uid, () => _user);
+    _box.put(uid, _user._toMap());
 
     // Automatically sign out all users and sign in this one.
-    _currentUserId = uid;
+    _box.put(CURRENT_USER_KEY, uid);
 
     return UserCredential._(_user);
   }
 
   Future<UserCredential> signInAnonymously() async {
+    _checkInitialization();
     await Future.delayed(Duration(milliseconds: 1000));
 
-    return UserCredential._(
-      User._({
-        'isAnonymous': true,
-        'uid': randomAlphaNumeric(40),
-      }),
-    );
+    final uid = randomAlphaNumeric(28);
+
+    final _user = User._({
+      'isAnonymous': true,
+      'uid': uid,
+    });
+
+    _box.put(uid, _user._toMap());
+
+    // Automatically sign out all users and sign in this one.
+    _box.put(CURRENT_USER_KEY, uid);
+
+    return UserCredential._(_user);
   }
 
   // TODO: 1. Validate Email (RegEx)
@@ -65,12 +82,14 @@ class LocalFirebaseAuth {
     @required String email,
     @required String password,
   }) async {
+    _checkInitialization();
+
     assert(email != null, "[email] cannot be null");
     assert(password != null, "[password] cannot be null");
 
     await Future.delayed(Duration(milliseconds: 1000));
 
-    if (!_users.values.any((u) => u.email == email)) {
+    if (!_userExists(email)) {
       throw FirebaseAuthException(
         code: 'ERROR_USER_NOT_FOUND',
         message: 'No account found with the given email address.',
@@ -78,21 +97,61 @@ class LocalFirebaseAuth {
       );
     }
 
-    final _user = _users.values.firstWhere((u) => u.email == email);
+    final _user = _getUser(email: email);
 
     // Automatically sign out all users and sign in this one.
-    _currentUserId = _user.uid;
+    _box.put(CURRENT_USER_KEY, _user.uid);
 
     return UserCredential._(_user);
   }
 
   Future<void> signOut() async {
+    _checkInitialization();
+
     await Future.delayed(Duration(milliseconds: 500));
 
-    // Remove current user email
-    _currentUserId = null;
+    // Remove current user uid
+    _box.put(CURRENT_USER_KEY, null);
   }
 
-  static Map<String, User> _users = {};
-  static String _currentUserId;
+  static void _checkInitialization() {
+    if (_appName == null) {
+      throw Exception(
+        "LocalFirebaseAuth has not been initialized.\n"
+        "Please call LocalFirebaseAuth.initialize('appName') before using any of the methods",
+      );
+    }
+  }
+
+  static bool _userExists(String email) {
+    var values = _box.values;
+    final userList = values.toList();
+    userList.retainWhere((element) => element is Map<String, dynamic>);
+
+    return userList.any((e) => e['email'] == email);
+  }
+
+  static User _getUser({String email, bool currentUser = false}) {
+    var values = _box.values;
+    final userList = values.toList();
+    userList.retainWhere((element) => element is Map<String, dynamic>);
+
+    for (var value in userList) {
+      if (currentUser) {
+        final _cUid = _box.get('currentUserId');
+
+        if (_cUid == null) return null;
+
+        return User._(userList.firstWhere((e) => e['uid'] == _cUid));
+      } else {
+        final _userMap = Map<String, dynamic>.from(value);
+
+        if (_userMap['email'] == email) {
+          return User._(_userMap);
+        }
+      }
+    }
+
+    return null;
+  }
 }

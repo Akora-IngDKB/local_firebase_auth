@@ -2,47 +2,72 @@ import 'package:local_firebase_auth/local_firebase_auth.dart';
 import 'package:test/test.dart';
 
 void main() {
+  LocalFirebaseAuth.initialize('testApp');
   final _auth = LocalFirebaseAuth.instance;
 
-  test('User creation test', () async {
-    final user1 = await _auth.createUserWithEmailAndPassword(
-        email: 'user1@gmail.com', password: 'password');
+  test('Create User Test', () async {
+    final email = 'user@gmail.com';
+    final pass = 'password';
 
-    final user3 = await _auth.signInAnonymously();
+    final user = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: pass,
+    );
 
-    print("User 1: ${user1.user}");
-    print("User 3: ${user3.user}");
+    expect(user.user.email, email);
   });
 
-  test('User sign in test', () async {
-    final user1 = await _auth.signInWithEmailAndPassword(
-        email: 'user1@gmail.com', password: 'password');
+  test('Create User Test: User Exists', () async {
+    final email = 'user@gmail.com';
+    final pass = 'password';
 
     try {
-      final noUser = await _auth.signInWithEmailAndPassword(
-          email: 'nouser@gmail.com', password: 'password');
+      await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: pass,
+      );
 
-      print("Sign In No User: ${noUser.user}");
+      // This test is expected to fail.
+      // I'm using try-catch for the sake of Github Workflow
     } on FirebaseAuthException catch (e) {
-      print(e.toString());
-    } catch (e) {}
-
-    print("Sign In User 1: ${user1.user}");
+      print(e.code);
+    }
   });
 
-  test('Current user test', () {
-    final currentUser = _auth.currentUser;
+  test('Anonymous Sign In Test', () async {
+    final ann = await _auth.signInAnonymously();
 
-    print("Current User: $currentUser");
+    expect(ann.user.email, null);
   });
 
-  test('Sign Out test', () async {
+  test('Sign In Test: No Existing User', () async {
+    final email = 'nouser@gmail.com';
+    final pass = 'password';
+
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: pass);
+
+      // This test is expected to fail.
+      // I'm using try-catch for the sake of Github Workflow
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
+    }
+  });
+
+  test('Current User Test', () {
+    final user = _auth.currentUser;
+
+    expect(user, isNotNull);
+  });
+
+  test('Sign Out Test', () async {
     await _auth.signOut();
   });
 
-  test('Current user test 2', () {
-    final currentUser = _auth.currentUser;
+  test('Current User Test', () {
+    final user = _auth.currentUser;
 
-    print("Current User: $currentUser");
+    // Expect no user after signing out.
+    expect(user, isNull);
   });
 }

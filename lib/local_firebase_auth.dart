@@ -2,6 +2,7 @@ library local_firebase_auth;
 
 import 'dart:async';
 
+import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
 import 'package:random_string/random_string.dart';
 
