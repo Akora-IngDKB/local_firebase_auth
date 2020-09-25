@@ -63,13 +63,13 @@ class User {
 
   Map<String, dynamic> _toMap() {
     return {
-      'displayName': this._displayName,
-      'email': this.email,
-      'emailVerified': this._emailVerified,
-      'isAnonymous': this._isAnonymous,
-      'phoneNumber': this._phoneNumber,
-      'photoURL': this._photoURL,
-      'uid': this._uid,
+      'displayName': _displayName,
+      'email': _email,
+      'emailVerified': _emailVerified,
+      'isAnonymous': _isAnonymous,
+      'phoneNumber': _phoneNumber,
+      'photoURL': _photoURL,
+      'uid': _uid,
     };
   }
 

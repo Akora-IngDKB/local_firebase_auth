@@ -77,3 +77,4 @@ build/
 testApp/
 doc/
 pubspec.lock
+example/exampleApp/
