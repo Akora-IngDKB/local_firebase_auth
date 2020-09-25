@@ -61,6 +61,18 @@ class User {
     _uid = map['uid'];
   }
 
+  Map<String, dynamic> _toMap() {
+    return {
+      'displayName': this._displayName,
+      'email': this.email,
+      'emailVerified': this._emailVerified,
+      'isAnonymous': this._isAnonymous,
+      'phoneNumber': this._phoneNumber,
+      'photoURL': this._photoURL,
+      'uid': this._uid,
+    };
+  }
+
   @override
   String toString() {
     return '$User(displayName: $displayName, email: $email, emailVerified: $emailVerified,'
