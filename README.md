@@ -18,7 +18,7 @@ An experimental dart package that mocks (emulates) the [firebase_auth](https://p
 import 'package:local_firebase_auth/local_firebase_auth.dart';
 ```
 
-When using this package alongside the official firebase plugin, it's advisable to import with a prefix to prevent conflict since it same class names except `LocalFirebaseAuth` (ofc :stuck_out_tongue_winking_eye:). Eg.  
+When using this package alongside the official firebase plugin, it's advisable to import with a prefix to prevent conflict since it has same class names except `LocalFirebaseAuth` (ofc :stuck_out_tongue_winking_eye:). Eg.  
 
 ```dart
 import 'package:local_firebase_auth/local_firebase_auth.dart' as localAuth;
