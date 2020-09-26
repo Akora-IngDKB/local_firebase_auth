@@ -60,10 +60,37 @@ final User user = LocalFirebaseAuth.instance.currentUser;
 ```
 
 ## Contributing
-This project is fully open-source. Feel free to open issues when you realize one and PRs are welcome as well.  
+This project is fully open-source. Feel free to contribute to this project.  
+
+If you find a bug or want a feature, but don't know how to fix/implement it, please fill an [issue](https://github.com/Akora-IngDKB/local_firebase_auth/issues).  
+If you fixed a bug or implemented a new feature, please send a [pull request](https://github.com/Akora-IngDKB/local_firebase_auth/pulls).
+
 
 ## Official Plugins Documentation
 For the full documentation of the official Firebase plugins, please [see the documentation](https://firebase.flutter.dev/docs/overview) available at https://firebase.flutter.dev
 
 ## License
-This project has been licensed under the MIT License. Check the [LICENSE](https://github.com/Akora-IngDKB/local_firebase_auth/blob/master/LICENSE) file for the details.
+This project has been licensed under the MIT License.
+```
+MIT License
+
+Copyright (c) [2020] [Akora Ing. DKB]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

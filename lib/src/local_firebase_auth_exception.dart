@@ -1,6 +1,6 @@
 part of local_firebase_auth;
 
-/// Generic exception related to Firebase Authentication. Check the error code
+/// Generic exception related to Local Firebase Authentication. Check the error code
 /// and message for more details.
 class FirebaseAuthException implements Exception {
   /// Unique error code
