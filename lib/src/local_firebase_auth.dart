@@ -6,6 +6,7 @@ class LocalFirebaseAuth {
   LocalFirebaseAuth._internal();
   factory LocalFirebaseAuth() => _instance;
 
+  /// Returns an instance of the [LocalFirebaseAuth].
   static LocalFirebaseAuth get instance => _instance;
 
   static Box _box;
@@ -65,6 +66,7 @@ class LocalFirebaseAuth {
       'email': email,
       'isAnonymous': false,
       'uid': uid,
+      'password': password,
     });
 
     await _box.put(uid, _user._toMap());
@@ -75,30 +77,40 @@ class LocalFirebaseAuth {
     return UserCredential._(_user);
   }
 
-  // TODO: If there's an anonymous user already, return that instead.
-
   /// Asynchronously creates and becomes an anonymous user.
+  ///
+  /// If there is already an anonymous user signed in, that user will be
+  /// returned instead. If there is any other existing user signed in, that
+  /// user will be signed out.
   Future<UserCredential> signInAnonymously() async {
     _checkInitialization();
 
     await Future.delayed(Duration(milliseconds: 1000));
 
+    final _user = _getUser(currentUser: true);
+
+    // Return current user if it is anonymous.
+    if (_user != null && _user.isAnonymous) {
+      await _box.put(_CURRENT_USER_KEY, _user.uid);
+
+      return UserCredential._(_user);
+    }
+
     final uid = randomAlphaNumeric(28);
 
-    final _user = User._({
+    final _newAnnUser = User._({
       'isAnonymous': true,
+      'emailVerified': false,
       'uid': uid,
     });
 
-    await _box.put(uid, _user._toMap());
+    await _box.put(uid, _newAnnUser._toMap());
 
     // Automatically sign out all users and sign in this one.
     await _box.put(_CURRENT_USER_KEY, uid);
 
-    return UserCredential._(_user);
+    return UserCredential._(_newAnnUser);
   }
-
-  // TODO: Validate password
 
   /// Attempts to sign in a user with the given email address and password.
   ///
@@ -138,6 +150,15 @@ class LocalFirebaseAuth {
     }
 
     final _user = _getUser(email: email);
+
+    if (_user._password != password) {
+      throw FirebaseAuthException(
+        code: 'ERROR_WRONG_PASSWORD',
+        message:
+            'Password does not match the account associated with the email address.',
+        email: email,
+      );
+    }
 
     // Automatically sign out all users and sign in this one.
     await _box.put(_CURRENT_USER_KEY, _user.uid);
@@ -194,5 +215,27 @@ class LocalFirebaseAuth {
     }
 
     return null;
+  }
+
+  Future<void> _deleteUser(User user) async {
+    final _user = _getUser(currentUser: true);
+
+    if (user.isAnonymous) {
+      await _box.delete(user.uid);
+
+      if (user.uid == _user.uid) return signOut();
+    }
+
+    if (_user == null || user.uid != _user.uid) {
+      throw FirebaseAuthException(
+        code: 'ERROR_REQUIRES_RECENT_LOGIN',
+        message: 'Deletion requires the user to have recently signed in.',
+        email: user.email,
+      );
+    } else {
+      await _box.delete(user.uid);
+
+      return signOut();
+    }
   }
 }
