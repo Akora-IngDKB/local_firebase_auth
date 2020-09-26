@@ -69,6 +69,20 @@ void main() {
     expect(user.user.email, email);
   });
 
+  test('Sign In Test: Wrong Password', () async {
+    final email = 'user@gmail.com';
+    final pass = 'passwords';
+
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: pass);
+
+      // This test is expected to fail.
+      // I'm using try-catch for the sake of Github Workflow
+    } on FirebaseAuthException catch (e) {
+      expect(e.code, 'ERROR_WRONG_PASSWORD');
+    }
+  });
+
   test('Sign In Test: No Existing User', () async {
     final email = 'nouser@gmail.com';
     final pass = 'password';
