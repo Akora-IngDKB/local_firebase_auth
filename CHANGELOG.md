@@ -1,4 +1,8 @@
-## [0.1.1] - [23-Sep-2020]
+## [0.2.0] - [26-Sep-2020]
+
+* Added email validation.
+
+## [0.1.1] - [25-Sep-2020]
 
 * Added example project.
 
