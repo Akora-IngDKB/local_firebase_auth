@@ -30,7 +30,7 @@ void main() {
       // This test is expected to fail.
       // I'm using try-catch for the sake of Github Workflow
     } on FirebaseAuthException catch (e) {
-      print(e.code);
+      expect(e.code, 'ERROR_EMAIL_ALREADY_IN_USE');
     }
   });
 
@@ -62,7 +62,7 @@ void main() {
       // This test is expected to fail.
       // I'm using try-catch for the sake of Github Workflow
     } on FirebaseAuthException catch (e) {
-      print(e.code);
+      expect(e.code, 'ERROR_USER_NOT_FOUND');
     }
   });
 
