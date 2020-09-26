@@ -216,4 +216,26 @@ class LocalFirebaseAuth {
 
     return null;
   }
+
+  Future<void> _deleteUser(User user) async {
+    final _user = _getUser(currentUser: true);
+
+    if (user.isAnonymous) {
+      await _box.delete(user.uid);
+
+      if (user.uid == _user.uid) return signOut();
+    }
+
+    if (_user == null || user.uid != _user.uid) {
+      throw FirebaseAuthException(
+        code: 'ERROR_REQUIRES_RECENT_LOGIN',
+        message: 'Deletion requires the user to have recently signed in.',
+        email: user.email,
+      );
+    } else {
+      await _box.delete(user.uid);
+
+      return signOut();
+    }
+  }
 }

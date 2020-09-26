@@ -1,7 +1,6 @@
 part of local_firebase_auth;
 
 /// A user account
-// TODO: 2. Implement user delete
 class User {
   String _displayName;
   String _email;
@@ -73,6 +72,18 @@ class User {
       'uid': _uid,
       'password': _password,
     };
+  }
+
+  /// Deletes and signs out the user.
+  ///
+  /// **Important**: this is a security-sensitive operation that requires the
+  /// user to have recently signed in.
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **requires-recent-login**:
+  ///  - Thrown if the user's last sign-in time does not meet the security
+  ///    threshold. This does not apply if the user is anonymous.
+  Future<void> delete() async {
+    await LocalFirebaseAuth.instance._deleteUser(this);
   }
 
   @override
