@@ -1,3 +1,7 @@
+## [0.3.0+1] - [26-Sep-2020]
+
+* Fixed example file not showing on pub.dev
+
 ## [0.3.0] - [26-Sep-2020]
 
 * Added password validation.
