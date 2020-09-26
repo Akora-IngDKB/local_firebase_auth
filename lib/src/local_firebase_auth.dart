@@ -6,6 +6,7 @@ class LocalFirebaseAuth {
   LocalFirebaseAuth._internal();
   factory LocalFirebaseAuth() => _instance;
 
+  /// Returns an instance of the [LocalFirebaseAuth].
   static LocalFirebaseAuth get instance => _instance;
 
   static Box _box;
@@ -76,27 +77,39 @@ class LocalFirebaseAuth {
     return UserCredential._(_user);
   }
 
-  // TODO: If there's an anonymous user already, return that instead.
-
   /// Asynchronously creates and becomes an anonymous user.
+  ///
+  /// If there is already an anonymous user signed in, that user will be
+  /// returned instead. If there is any other existing user signed in, that
+  /// user will be signed out.
   Future<UserCredential> signInAnonymously() async {
     _checkInitialization();
 
     await Future.delayed(Duration(milliseconds: 1000));
 
+    final _user = _getUser(currentUser: true);
+
+    // Return current user if it is anonymous.
+    if (_user != null && _user.isAnonymous) {
+      await _box.put(_CURRENT_USER_KEY, _user.uid);
+
+      return UserCredential._(_user);
+    }
+
     final uid = randomAlphaNumeric(28);
 
-    final _user = User._({
+    final _newAnnUser = User._({
       'isAnonymous': true,
+      'emailVerified': false,
       'uid': uid,
     });
 
-    await _box.put(uid, _user._toMap());
+    await _box.put(uid, _newAnnUser._toMap());
 
     // Automatically sign out all users and sign in this one.
     await _box.put(_CURRENT_USER_KEY, uid);
 
-    return UserCredential._(_user);
+    return UserCredential._(_newAnnUser);
   }
 
   /// Attempts to sign in a user with the given email address and password.
