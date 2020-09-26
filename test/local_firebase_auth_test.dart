@@ -55,6 +55,10 @@ void main() {
     final ann = await _auth.signInAnonymously();
 
     expect(ann.user.email, null);
+
+    final ann2 = await _auth.signInAnonymously();
+
+    expect(ann2.user.uid, ann.user.uid);
   });
 
   test('Sign In Test', () async {
