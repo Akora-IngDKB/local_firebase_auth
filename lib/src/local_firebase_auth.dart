@@ -23,9 +23,6 @@ class LocalFirebaseAuth {
   /// not.
   User get currentUser => _getUser(currentUser: true);
 
-  // TODO: 1. Validate email (RegEx)
-  // TODO: 2. Throw appropriate exceptions
-
   /// Tries to create a new user account with the given email address and
   /// password.
   ///
@@ -39,10 +36,19 @@ class LocalFirebaseAuth {
     @required String password,
   }) async {
     _checkInitialization();
+
     assert(email != null, '[email] cannot be null');
     assert(password != null, '[password] cannot be null');
 
-    await Future.delayed(Duration(milliseconds: 1500));
+    if (!_EmailValidator._validate(email)) {
+      throw FirebaseAuthException(
+        code: 'ERROR_INVALID_EMAIL',
+        message: 'The given email address is invalid.',
+        email: email,
+      );
+    }
+
+    await Future.delayed(Duration(milliseconds: 1000));
 
     if (_userExists(email)) {
       throw FirebaseAuthException(
@@ -74,6 +80,7 @@ class LocalFirebaseAuth {
   /// Asynchronously creates and becomes an anonymous user.
   Future<UserCredential> signInAnonymously() async {
     _checkInitialization();
+
     await Future.delayed(Duration(milliseconds: 1000));
 
     final uid = randomAlphaNumeric(28);
@@ -91,8 +98,7 @@ class LocalFirebaseAuth {
     return UserCredential._(_user);
   }
 
-  // TODO: 1. Validate Email (RegEx)
-  // TODO: 2. Validate password
+  // TODO: Validate password
 
   /// Attempts to sign in a user with the given email address and password.
   ///
@@ -112,6 +118,14 @@ class LocalFirebaseAuth {
 
     assert(email != null, '[email] cannot be null');
     assert(password != null, '[password] cannot be null');
+
+    if (!_EmailValidator._validate(email)) {
+      throw FirebaseAuthException(
+        code: 'ERROR_INVALID_EMAIL',
+        message: 'The given email address is invalid.',
+        email: email,
+      );
+    }
 
     await Future.delayed(Duration(milliseconds: 1000));
 

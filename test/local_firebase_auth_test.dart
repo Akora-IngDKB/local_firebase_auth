@@ -34,6 +34,23 @@ void main() {
     }
   });
 
+  test('Create User Test: Invalid Email', () async {
+    final email = 'gmail.com';
+    final pass = 'password';
+
+    try {
+      await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: pass,
+      );
+
+      // This test is expected to fail.
+      // I'm using try-catch for the sake of Github Workflow
+    } on FirebaseAuthException catch (e) {
+      expect(e.code, 'ERROR_INVALID_EMAIL');
+    }
+  });
+
   test('Anonymous Sign In Test', () async {
     final ann = await _auth.signInAnonymously();
 

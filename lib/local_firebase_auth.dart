@@ -15,3 +15,4 @@ part 'src/local_user.dart';
 part 'src/local_user_credential.dart';
 part 'src/local_firebase_auth.dart';
 part 'src/local_firebase_auth_exception.dart';
+part 'src/email_validator.dart';
