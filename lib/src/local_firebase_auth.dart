@@ -65,6 +65,7 @@ class LocalFirebaseAuth {
       'email': email,
       'isAnonymous': false,
       'uid': uid,
+      'password': password,
     });
 
     await _box.put(uid, _user._toMap());
@@ -97,8 +98,6 @@ class LocalFirebaseAuth {
 
     return UserCredential._(_user);
   }
-
-  // TODO: Validate password
 
   /// Attempts to sign in a user with the given email address and password.
   ///
@@ -138,6 +137,15 @@ class LocalFirebaseAuth {
     }
 
     final _user = _getUser(email: email);
+
+    if (_user._password != password) {
+      throw FirebaseAuthException(
+        code: 'ERROR_WRONG_PASSWORD',
+        message:
+            'Password does not match the account associated with the email address.',
+        email: email,
+      );
+    }
 
     // Automatically sign out all users and sign in this one.
     await _box.put(_CURRENT_USER_KEY, _user.uid);

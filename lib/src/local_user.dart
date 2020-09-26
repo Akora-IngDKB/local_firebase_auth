@@ -1,7 +1,6 @@
 part of local_firebase_auth;
 
 /// A user account
-// TODO: 1. Add passwords
 // TODO: 2. Implement user delete
 class User {
   String _displayName;
@@ -11,6 +10,7 @@ class User {
   String _phoneNumber;
   String _photoURL;
   String _uid;
+  String _password;
 
   /// The users display name.
   ///
@@ -59,6 +59,7 @@ class User {
     _phoneNumber = map['phoneNumber'];
     _photoURL = map['photoURL'];
     _uid = map['uid'];
+    _password = map['password'];
   }
 
   Map<String, dynamic> _toMap() {
@@ -70,6 +71,7 @@ class User {
       'phoneNumber': _phoneNumber,
       'photoURL': _photoURL,
       'uid': _uid,
+      'password': _password,
     };
   }
 
