@@ -18,38 +18,24 @@ void main() {
       expect(credential.user.email, email);
     });
 
-    test('Create User Test: User Already Exists', () async {
+    test('Create User Test: User Already Exists', () {
       final email = 'user@gmail.com';
       final pass = 'password';
 
-      try {
-        await _auth.createUserWithEmailAndPassword(
-          email: email,
-          password: pass,
-        );
-
-        // This test is expected to fail.
-        // I'm using try-catch for the sake of Github Workflow.
-      } on FirebaseAuthException catch (e) {
-        expect(e.code, 'ERROR_EMAIL_ALREADY_IN_USE');
-      }
+      expect(
+        _auth.createUserWithEmailAndPassword(email: email, password: pass),
+        throwsException,
+      );
     });
 
-    test('Create User Test: Invalid Email', () async {
+    test('Create User Test: Invalid Email', () {
       final email = 'gmail.com';
       final pass = 'password';
 
-      try {
-        await _auth.createUserWithEmailAndPassword(
-          email: email,
-          password: pass,
-        );
-
-        // This test is expected to fail.
-        // I'm using try-catch for the sake of Github Workflow.
-      } on FirebaseAuthException catch (e) {
-        expect(e.code, 'ERROR_INVALID_EMAIL');
-      }
+      expect(
+        _auth.createUserWithEmailAndPassword(email: email, password: pass),
+        throwsException,
+      );
     });
   });
 
@@ -59,7 +45,7 @@ void main() {
       final ann = await _auth.signInAnonymously();
 
       ann1 = ann.user;
-      expect(ann.user.email, null);
+      expect(ann.user.email, isNull);
     });
 
     test('', () async {
@@ -84,31 +70,24 @@ void main() {
       expect(credential.user.email, email);
     });
 
-    test('Sign In Test: Wrong Password', () async {
+    test('Sign In Test: Wrong Password', () {
       final email = 'user@gmail.com';
       final pass = 'passwords';
 
-      try {
-        await _auth.signInWithEmailAndPassword(email: email, password: pass);
-
-        // This test is expected to fail.
-        // I'm using try-catch for the sake of Github Workflow.
-      } on FirebaseAuthException catch (e) {
-        expect(e.code, 'ERROR_WRONG_PASSWORD');
-      }
+      expect(
+        _auth.signInWithEmailAndPassword(email: email, password: pass),
+        throwsException,
+      );
     });
 
-    test('Sign In Test: No Existing User', () async {
+    test('Sign In Test: No Existing User', () {
       final email = 'nouser@gmail.com';
       final pass = 'password';
 
-      // This test is expected to fail.
-      // I'm using try-catch for the sake of Github Workflow.
-      try {
-        await _auth.signInWithEmailAndPassword(email: email, password: pass);
-      } on FirebaseAuthException catch (e) {
-        expect(e.code, 'ERROR_USER_NOT_FOUND');
-      }
+      expect(
+        _auth.signInWithEmailAndPassword(email: email, password: pass),
+        throwsException,
+      );
     });
   });
 
