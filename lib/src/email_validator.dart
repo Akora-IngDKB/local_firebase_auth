@@ -293,9 +293,9 @@ class _EmailValidator {
       [bool allowTopLevelDomains = false, bool allowInternational = true]) {
     _index = 0;
 
-    if (email == null) {
-      throw ArgumentError('email');
-    }
+    // if (email == null) {
+    //   throw ArgumentError('email');
+    // }
 
     if (email.isEmpty || email.length >= 255) {
       return false;
