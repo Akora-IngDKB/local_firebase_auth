@@ -40,7 +40,7 @@ void main() {
   });
 
   group('Anonymous User Tests:', () {
-    User ann1;
+    User? ann1;
     test('Sign In Test', () async {
       final ann = await _auth.signInAnonymously();
 
@@ -53,7 +53,7 @@ void main() {
 
       // Currently logged in user is anonymous.
       // We expect the same user to be returned.
-      expect(ann2.user.uid, ann1.uid);
+      expect(ann2.user.uid, ann1!.uid);
     });
   });
 
@@ -111,7 +111,7 @@ void main() {
   });
 
   group('User Deletion Tests:', () {
-    User user;
+    User? user;
 
     test('Delete Anonymous User', () async {
       final ann = await _auth.signInAnonymously();
@@ -142,7 +142,7 @@ void main() {
       // This test is expected to fail.
       // I'm using try-catch for the sake of Github Workflow.
       try {
-        await user.delete();
+        await user!.delete();
       } on FirebaseAuthException catch (e) {
         expect(e.code, 'ERROR_REQUIRES_RECENT_LOGIN');
       }

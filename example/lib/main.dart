@@ -27,7 +27,7 @@ void main(List<String> arguments) async {
 
   // Get current user
   final user = _auth.currentUser;
-  print('Current User: ${user.email}');
+  print('Current User: ${user!.email}');
 
   // Sign out
   await _auth.signOut().then((value) => print('Signed Out'));

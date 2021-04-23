@@ -9,8 +9,8 @@ class LocalFirebaseAuth {
   /// Returns an instance of the [LocalFirebaseAuth].
   static LocalFirebaseAuth get instance => _instance;
 
-  static Box _box;
-  static String _appName;
+  static late Box _box;
+  static late String _appName;
 
   static final String _CURRENT_USER_KEY = 'currentUserId';
 
@@ -22,7 +22,7 @@ class LocalFirebaseAuth {
 
   /// Returns the current [User] if they are currently signed-in, or `null` if
   /// not.
-  User get currentUser => _getUser(currentUser: true);
+  User? get currentUser => _getUser(currentUser: true);
 
   /// Tries to create a new user account with the given email address and
   /// password.
@@ -33,13 +33,10 @@ class LocalFirebaseAuth {
   /// - **invalid-email**:
   ///  - Thrown if the email address is not valid.
   Future<UserCredential> createUserWithEmailAndPassword({
-    @required String email,
-    @required String password,
+    required String email,
+    required String password,
   }) async {
     _checkInitialization();
-
-    assert(email != null, '[email] cannot be null');
-    assert(password != null, '[password] cannot be null');
 
     if (!_EmailValidator._validate(email)) {
       throw FirebaseAuthException(
@@ -123,13 +120,10 @@ class LocalFirebaseAuth {
   ///  - Thrown if the password is invalid for the given email, or the account
   ///    corresponding to the email does not have a password set.
   Future<UserCredential> signInWithEmailAndPassword({
-    @required String email,
-    @required String password,
+    required String email,
+    required String password,
   }) async {
     _checkInitialization();
-
-    assert(email != null, '[email] cannot be null');
-    assert(password != null, '[password] cannot be null');
 
     if (!_EmailValidator._validate(email)) {
       throw FirebaseAuthException(
@@ -151,7 +145,7 @@ class LocalFirebaseAuth {
 
     final _user = _getUser(email: email);
 
-    if (_user._password != password) {
+    if (_user!._password != password) {
       throw FirebaseAuthException(
         code: 'ERROR_WRONG_PASSWORD',
         message:
@@ -177,7 +171,7 @@ class LocalFirebaseAuth {
   }
 
   static void _checkInitialization() {
-    if (_appName == null) {
+    if (_appName.isEmpty) {
       throw Exception(
         'LocalFirebaseAuth has not been initialized.\n'
         "Please call LocalFirebaseAuth.initialize('appName') before using any of the methods",
@@ -193,7 +187,7 @@ class LocalFirebaseAuth {
     return userList.any((e) => e['email'] == email);
   }
 
-  static User _getUser({String email, bool currentUser = false}) {
+  static User? _getUser({String? email, bool currentUser = false}) {
     var values = _box.values;
     final userList = values.toList();
     userList.retainWhere((element) => element is Map<String, dynamic>);
@@ -223,7 +217,7 @@ class LocalFirebaseAuth {
     if (user.isAnonymous) {
       await _box.delete(user.uid);
 
-      if (user.uid == _user.uid) return signOut();
+      if (user.uid == _user!.uid) return signOut();
     }
 
     if (_user == null || user.uid != _user.uid) {

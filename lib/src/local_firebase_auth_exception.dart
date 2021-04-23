@@ -10,11 +10,11 @@ class FirebaseAuthException implements Exception {
   final String message;
 
   /// The email of the user's account used for sign-in/creation.
-  final String email;
+  final String? email;
 
   FirebaseAuthException({
-    @required this.message,
-    this.code,
+    required this.message,
+    required this.code,
     this.email,
   });
 

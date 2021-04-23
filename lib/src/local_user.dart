@@ -2,26 +2,26 @@ part of local_firebase_auth;
 
 /// A user account
 class User {
-  String _displayName;
-  String _email;
-  bool _emailVerified;
-  bool _isAnonymous;
-  String _phoneNumber;
-  String _photoURL;
-  String _uid;
-  String _password;
+  String? _displayName;
+  String? _email;
+  late bool _emailVerified;
+  late bool _isAnonymous;
+  String? _phoneNumber;
+  String? _photoURL;
+  late String _uid;
+  String? _password;
 
   /// The users display name.
   ///
   /// Will be `null` if signing in anonymously or via password authentication.
-  String get displayName {
+  String? get displayName {
     return _displayName;
   }
 
   /// The users email address.
   ///
   /// Will be `null` if signing in anonymously.
-  String get email {
+  String? get email {
     return _email;
   }
 
@@ -36,12 +36,12 @@ class User {
   }
 
   /// Returns the users phone number.
-  String get phoneNumber {
+  String? get phoneNumber {
     return _phoneNumber;
   }
 
   /// Returns a photo URL for the user.
-  String get photoURL {
+  String? get photoURL {
     return _photoURL;
   }
 
@@ -50,8 +50,8 @@ class User {
     return _uid;
   }
 
-  User._([Map<String, dynamic> map]) {
-    _displayName = map['displayName'];
+  User._([Map<String, dynamic>? map]) {
+    _displayName = map!['displayName'];
     _email = map['email'];
     _emailVerified = map['emailVerified'] ?? true;
     _isAnonymous = map['isAnonymous'] ?? false;

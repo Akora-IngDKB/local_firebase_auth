@@ -1,3 +1,7 @@
+## [1.0.0-nullsafety.0] - [30-Mar-2021]
+
+* Migrate package to null-safety as a pre-release.
+
 ## [0.3.0+1] - [26-Sep-2020]
 
 * Fixed example file not showing on pub.dev
