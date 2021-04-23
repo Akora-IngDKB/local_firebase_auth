@@ -1,3 +1,7 @@
+## [1.0.0] - 23-April-2021
+
+* Promote null-safety to stable branch.
+
 ## [1.0.0-nullsafety.0] - [30-Mar-2021]
 
 * Migrate package to null-safety as a pre-release.
